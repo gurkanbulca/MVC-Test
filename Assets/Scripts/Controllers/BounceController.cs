@@ -1,11 +1,22 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BounceController : MonoBehaviour, IController
+public class BounceController : Element
 {
-    public void OnNotification(Object sender, string notificationString, params Object[] data)
+    public BounceModel Model { get; private set; }
+
+    private void Awake()
     {
-        throw new System.NotImplementedException();
+        Model = ScriptableObject.CreateInstance<BounceModel>();
+    }
+
+    public void OnBallHitToGround()
+    {
+        Model.bounces++;
+        App.Notify(BounceNotification._BallHitGround,Model);
+
+        Debug.Log("OnBallHitToGround: "+Model.bounces);
     }
 }
