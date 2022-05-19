@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-public class GameController : Element
+public class GameController : ElementOf<Application>
 {
     private GameModel _model;
 
     [SerializeField] private int winCondition;
-    
+
     private void Awake()
     {
         _model = new GameModel(winCondition);
         
-        App.OnBounceNotificationSent += HandleBounceNotification;
+        Master.OnBounceNotificationSent += HandleBounceNotification;
     }
 
     private void HandleBounceNotification(string notificationString, Object[] payload)
@@ -27,7 +27,7 @@ public class GameController : Element
 
     private void HandleBallHitToGround(Object[] payload)
     {
-        var bounces = ((BounceModel) payload[0]).bounces;
+        var bounces = ((BounceModel) payload[0]).Bounces;
         var isWin = CheckForWinCondition(bounces);
         if (isWin)
             GameWin();
@@ -35,9 +35,7 @@ public class GameController : Element
 
     private void GameWin()
     {
-        App.Notify(GameNotification._Win);
-
-        Debug.Log("Game win!");
+        Master.Notify(GameNotification._Win);
     }
 
     private bool CheckForWinCondition(int bounces)

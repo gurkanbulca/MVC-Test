@@ -1,27 +1,23 @@
+using System;
 using UnityEngine;
 
-public class BallSub : SubElement<BounceController>
+public class BallView : ElementOf<BounceController>
 {
     private Collider _collider;
     private Rigidbody _rigidbody;
     private bool _checkForCollision = true;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         _collider = GetComponent<Collider>();
         _rigidbody = GetComponent<Rigidbody>();
 
-        App.OnGameNotificationSent += HandleGameNotification;
+        Master.OnGameWin += HandleGameWin;
     }
 
-    private void HandleGameNotification(string notificationString, Object[] payload)
+    private void OnDestroy()
     {
-        if (notificationString == GameNotification._Win)
-        {
-            HandleGameWin();
-        }
+        Master.OnGameWin -= HandleGameWin;
     }
 
     private void HandleGameWin()
@@ -34,6 +30,6 @@ public class BallSub : SubElement<BounceController>
     private void OnCollisionEnter(Collision collision)
     {
         if (_checkForCollision)
-            Controller.OnBallHitToGround();
+            Master.IncreaseBounces();
     }
 }

@@ -4,6 +4,6 @@ public class GameModel
 
     public GameModel(int winCondition)
     {
-        this.WinCondition = winCondition;
+        WinCondition = winCondition;
     }
 }

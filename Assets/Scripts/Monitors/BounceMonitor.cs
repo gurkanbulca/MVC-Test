@@ -1,29 +1,29 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-public class BounceMonitor : SubElement<BounceController>
+public class BounceMonitor : ElementOf<BounceController>
 {
     [SerializeField, ReadOnly] private int bounces;
 
     private void Start()
     {
-        bounces = Controller.Model.bounces;
-        App.OnBounceNotificationSent += HandleBounceNotification;
+        bounces = Master.Model.Bounces;
+        Master.OnBallHitToGround += HandleBallHitToGround;
     }
 
-    private void HandleBounceNotification(string notificationString, Object[] payload)
+    private void OnDestroy()
     {
-        if (notificationString == BounceNotification._BallHitGround)
-            bounces = ((BounceModel) payload[0]).bounces;
+        Master.OnBallHitToGround -= HandleBallHitToGround;
+    }
+
+    private void HandleBallHitToGround(BounceModel model)
+    {
+        bounces = model.Bounces;
     }
 
     [Button]
     private void AddBounce()
     {
-        Controller.OnBallHitToGround();
+        Master.IncreaseBounces();
     }
 }
